@@ -1,3 +1,3 @@
 # CATS
-
-hi
+ToDo list
+- [X] Research question  
