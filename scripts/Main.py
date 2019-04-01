@@ -5,6 +5,7 @@ import sys
 import pandas as pd
 from sklearn.decomposition import PCA
 import seaborn as sns
+import matplotlib.pyplot as plt
 
 
 def calculate_pca(data,labels):
@@ -22,12 +23,12 @@ def calculate_pca(data,labels):
     principalDf = principalDf.set_index(df_data.index.values)
     # add disease type
     finalDf = pd.concat([principalDf, labels[["Subgroup"]]],ignore_index=False, axis = 1)
-    print(finalDf.iloc[0:5,0:5])
     
     pca_color=sns.pairplot(x_vars=["principal component 1"], y_vars=["principal component 2"], data=finalDf, hue="Subgroup", height=5)
     path_PCA_figure_color = "../images/PCA_color.png"
     pca_color.set(xlabel = "PC1 (" + str(round(pca.explained_variance_ratio_[0]*100, 1)) + "%)")
     pca_color.set(ylabel = "PC2 (" + str(round(pca.explained_variance_ratio_[1]*100, 1)) + "%)")
+    plt.show()
     pca_color.savefig(path_PCA_figure_color)
     print("Image saved to: " + path_PCA_figure_color)
     
@@ -53,6 +54,7 @@ def main():
                         type=str, help="label file", metavar="FILE")
     parser.add_argument("-o", "--output", dest="output_folder",
                         type=str, help="output folder", metavar="FOLDER")
+    parser.add_argument("-PCA", action="store_true", help="show pca of data")
                         
     args = parser.parse_args()
     
@@ -76,10 +78,10 @@ def main():
     
     # Load data 
     data, labels = load_data(args.input_file, args.label_file)
-    print(data.iloc[0:5,0:5])
     
     # Simple pca
-    calculate_pca(data, labels)
+    if args.PCA:
+        calculate_pca(data, labels)
 
 if __name__ == '__main__':
     main()
