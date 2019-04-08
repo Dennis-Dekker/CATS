@@ -40,7 +40,7 @@ def nested_CV(X_train,y_train, estimator, param):
 
         in_cv =KFold(n_splits=4, shuffle=True, random_state=state)
         #inner loop for hyperparameters tuning
-        GSCV=GridSearchCV(estimator=estimator, param_grid=param, cv=in_cv, verbose=2,n_jobs=-1)
+        GSCV=GridSearchCV(estimator=estimator, param_grid=param, cv=in_cv, verbose=1,n_jobs=-1)
         #train a model with each set of parameters
         GSCV.fit(X_train_out, ravel(y_train_out))
         #predict using the best set of hyperparameters
@@ -60,8 +60,9 @@ def nested_SVM(data,labels):
     
     print(df_data.iloc[0:5,0:5])
         
-    tuned_parameters = [{'kernel': ['rbf'], 'gamma': [1e-3, 1e-4, 1e-5, 1e-6], 'C': range(10,1000,10)},
-    {'kernel': ['linear'], 'C': range(1,101,10)}
+    tuned_parameters = [{'kernel': ['rbf'], 'gamma': ["auto",1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6], 'C': range(1,500,10)},
+    {'kernel': ['linear'], 'C': range(1,500,10)},
+    {'kernel': ["sigmoid"], "C": range(1,500,10), 'gamma': ['auto',1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6]}
     ]
     SVM_dist = nested_CV(df_data,labels, SVC(), tuned_parameters)
 
