@@ -50,6 +50,15 @@ def nested_CV(X_train,y_train, estimator, param):
         print(i)
     print("Mean of outer loop: "+str(np.mean(out_scores))+" std: "+str(np.std(out_scores)))
     return out_scores
+    
+def nested_SVM(data,labels):
+    df_data = data.drop(["Chromosome", "Start", "End", "Nclone"], axis = 1).transpose()
+    labels = labels.set_index(labels.loc[:,"Sample"]).drop("Sample", axis = 1)
+    
+    tuned_parameters = [{'kernel': ['rbf'], 'gamma': [1e-3, 1e-4], 'C': [1, 10, 100]},
+    {'kernel': ['linear'], 'C': [1, 5]}
+    ]
+    nested_CV(df_data,labels, SVC(), tuned_parameters)
 
 def calculate_pca(data,labels):
     
@@ -126,7 +135,7 @@ def main():
     if args.PCA:
         calculate_pca(data, labels)
     
-    calculate_SVM(data,labels)
+    nested_SVM(data,labels)
 
 if __name__ == '__main__':
     main()
