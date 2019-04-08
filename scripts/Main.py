@@ -7,11 +7,14 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from sklearn import datasets
 import seaborn as sns
 import sklearn
+from sklearn.metrics import accuracy_score, auc, confusion_matrix, cohen_kappa_score, f1_score
 import argparse
 from sklearn.decomposition import PCA
 import seaborn as sns
+from sklearn.svm import SVC
 from sklearn import svm
 from numpy import ravel
 from sklearn.model_selection import GridSearchCV,cross_val_score,KFold
@@ -30,16 +33,16 @@ def nested_CV(X_train,y_train, estimator, param):
     state=1
     out_scores=[]
     in_winner_param=[]
-    out_cv = KFold(n_splits=7, shuffle=True, random_state=state)
+    out_cv = KFold(n_splits=5, shuffle=True, random_state=state)
     for i, (index_train_out, index_test_out) in enumerate(out_cv.split(X_train)):
-        X_train_out, X_test_out = X_train[index_train_out], X_train[index_test_out]
-        y_train_out, y_test_out = y_train[index_train_out], y_train[index_test_out]
+        X_train_out, X_test_out = X_train.iloc[index_train_out], X_train.iloc[index_test_out]
+        y_train_out, y_test_out = y_train.iloc[index_train_out], y_train.iloc[index_test_out]
 
-        in_cv =KFold(n_splits=3, shuffle=True, random_state=state)
+        in_cv =KFold(n_splits=4, shuffle=True, random_state=state)
         #inner loop for hyperparameters tuning
         GSCV=GridSearchCV(estimator=estimator, param_grid=param, cv=in_cv, verbose=2,n_jobs=-1)
         #train a model with each set of parameters
-        GSCV.fit(X_train_out, y_train_out)
+        GSCV.fit(X_train_out, ravel(y_train_out))
         #predict using the best set of hyperparameters
         prediction=GSCV.predict(X_test_out)
         in_winner_param.append(GSCV.best_params_)
@@ -55,10 +58,12 @@ def nested_SVM(data,labels):
     df_data = data.drop(["Chromosome", "Start", "End", "Nclone"], axis = 1).transpose()
     labels = labels.set_index(labels.loc[:,"Sample"]).drop("Sample", axis = 1)
     
-    tuned_parameters = [{'kernel': ['rbf'], 'gamma': [1e-3, 1e-4], 'C': [1, 10, 100]},
-    {'kernel': ['linear'], 'C': [1, 5]}
+    print(df_data.iloc[0:5,0:5])
+        
+    tuned_parameters = [{'kernel': ['rbf'], 'gamma': [1e-3, 1e-4, 1e-5, 1e-6], 'C': range(10,1000,10)},
+    {'kernel': ['linear'], 'C': range(1,101,10)}
     ]
-    nested_CV(df_data,labels, SVC(), tuned_parameters)
+    SVM_dist = nested_CV(df_data,labels, SVC(), tuned_parameters)
 
 def calculate_pca(data,labels):
     
