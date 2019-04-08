@@ -1,4 +1,9 @@
 # CATS
+
+Amount of features = 10
+
+Classifying method = SVM
+
 ToDo list
 - [ ] Research question 
 - [ ] Background in tumor subtypes
