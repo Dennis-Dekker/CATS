@@ -34,6 +34,7 @@ def nested_CV(X_train,y_train, estimator, param, use_stratified):
     out_scores=[]
     in_winner_param=[]
     out_n_splits = 5
+    in_n_splits = 4
     
     if use_stratified:
         # StratifiedKFold = Equal amount of each class per fold (uncomment next line to use)
@@ -48,7 +49,7 @@ def nested_CV(X_train,y_train, estimator, param, use_stratified):
         X_train_out, X_test_out = X_train.iloc[index_train_out], X_train.iloc[index_test_out]
         y_train_out, y_test_out = y_train.iloc[index_train_out], y_train.iloc[index_test_out]
 
-        in_cv =KFold(n_splits=4, shuffle=True, random_state=state)
+        in_cv =KFold(n_splits=in_n_splits, shuffle=True, random_state=state)
         #inner loop for hyperparameters tuning
         GSCV=GridSearchCV(estimator=estimator, param_grid=param, cv=in_cv, verbose=1,n_jobs=-1)
         #train a model with each set of parameters
