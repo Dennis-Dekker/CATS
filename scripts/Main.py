@@ -29,14 +29,21 @@ def calculate_SVM(data, labels):
     
     return
     
-def nested_CV(X_train,y_train, estimator, param):
+def nested_CV(X_train,y_train, estimator, param, use_stratified):
     state=1
     out_scores=[]
     in_winner_param=[]
-    # Kfold = random amount of each class per fold (uncomment next line to use)
-    #out_cv = KFold(n_splits=5, shuffle=True, random_state=state)
-    # StratifiedKFold = Equal amount of each class per fold (uncomment next line to use)
-    out_cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=state)
+    out_n_splits = 5
+    
+    if use_stratified:
+        # StratifiedKFold = Equal amount of each class per fold (uncomment next line to use)
+        out_cv = StratifiedKFold(n_splits=out_n_splits, shuffle=True, random_state=state)
+        print("Using stratified k-fold splitting, number of outer splits:\t" + str(out_n_splits))
+    else:
+        # Kfold = random amount of each class per fold
+        out_cv = KFold(n_splits=out_n_splits, shuffle=True, random_state=state)
+        print("Using unstratified k-fold splitting, number of outer splits:\t" + str(out_n_splits))
+    
     for i, (index_train_out, index_test_out) in enumerate(out_cv.split(X_train,y_train)):
         X_train_out, X_test_out = X_train.iloc[index_train_out], X_train.iloc[index_test_out]
         y_train_out, y_test_out = y_train.iloc[index_train_out], y_train.iloc[index_test_out]
@@ -57,14 +64,14 @@ def nested_CV(X_train,y_train, estimator, param):
     print("Mean of outer loop: "+str(np.mean(out_scores))+" std: "+str(np.std(out_scores)))
     return out_scores
     
-def nested_SVM(data,labels, hyperparameters):
-    print(data.shape)
+def nested_SVM(data,labels, hyperparameters, use_stratified):
+    print("Amount of features" + str(data.shape[0]))
     data = data[data["Nclone"] < 50]
     print(data.shape)
     df_data = data.drop(["Chromosome", "Start", "End", "Nclone"], axis = 1).transpose()
     labels = labels.set_index(labels.loc[:,"Sample"]).drop("Sample", axis = 1)
         
-    SVM_dist = nested_CV(df_data,labels, SVC(), hyperparameters)
+    SVM_dist = nested_CV(df_data,labels, SVC(), hyperparameters, use_stratified)
 
 def calculate_pca(data,labels):
     
@@ -114,9 +121,11 @@ def main():
     parser.add_argument("-o", "--output", dest="output_folder",
                         type=str, help="output folder", metavar="FOLDER")
     parser.add_argument("-PCA", action="store_true", help="show pca of data")
+    parser.add_argument("-unStrat", "--use_unstratified", action="store_false",
+                        help="use unstratified k-fold splitting")
                         
     args = parser.parse_args()
-    
+        
     if args.input_file == None:
         default_input_file = "../data/Train_call.txt"
         print("No input file given, using default input file:\t\t" + default_input_file)
@@ -148,7 +157,7 @@ def main():
     if args.PCA:
         calculate_pca(data, labels)
     
-    nested_SVM(data,labels, tuned_parameters)
+    nested_SVM(data, labels, tuned_parameters, args.use_unstratified)
 
 if __name__ == '__main__':
     main()
