@@ -17,7 +17,7 @@ import seaborn as sns
 from sklearn.svm import SVC
 from sklearn import svm
 from numpy import ravel
-from sklearn.model_selection import GridSearchCV,cross_val_score,KFold
+from sklearn.model_selection import GridSearchCV,cross_val_score,KFold,StratifiedKFold
 
 
 def calculate_SVM(data, labels):
@@ -33,8 +33,11 @@ def nested_CV(X_train,y_train, estimator, param):
     state=1
     out_scores=[]
     in_winner_param=[]
-    out_cv = KFold(n_splits=5, shuffle=True, random_state=state)
-    for i, (index_train_out, index_test_out) in enumerate(out_cv.split(X_train)):
+    # Kfold = random amount of each class per fold (uncomment next line to use)
+    #out_cv = KFold(n_splits=5, shuffle=True, random_state=state)
+    # StratifiedKFold = Equal amount of each class per fold (uncomment next line to use)
+    out_cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=state)
+    for i, (index_train_out, index_test_out) in enumerate(out_cv.split(X_train,y_train)):
         X_train_out, X_test_out = X_train.iloc[index_train_out], X_train.iloc[index_test_out]
         y_train_out, y_test_out = y_train.iloc[index_train_out], y_train.iloc[index_test_out]
 
@@ -55,10 +58,11 @@ def nested_CV(X_train,y_train, estimator, param):
     return out_scores
     
 def nested_SVM(data,labels):
+    print(data.shape)
+    data = data[data["Nclone"] < 50]
+    print(data.shape)
     df_data = data.drop(["Chromosome", "Start", "End", "Nclone"], axis = 1).transpose()
     labels = labels.set_index(labels.loc[:,"Sample"]).drop("Sample", axis = 1)
-    
-    print(df_data.iloc[0:5,0:5])
         
     tuned_parameters = [{'kernel': ['rbf'], 'gamma': ["auto",1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6], 'C': range(1,500,10)},
     {'kernel': ['linear'], 'C': range(1,500,10)},
