@@ -64,6 +64,7 @@ def nested_SVM(data,labels):
     df_data = data.drop(["Chromosome", "Start", "End", "Nclone"], axis = 1).transpose()
     labels = labels.set_index(labels.loc[:,"Sample"]).drop("Sample", axis = 1)
         
+    # hyperparameter range for SVM
     tuned_parameters = [{'kernel': ['rbf'], 'gamma': ["auto",1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6], 'C': range(1,500,10)},
     {'kernel': ['linear'], 'C': range(1,500,10)},
     {'kernel': ["sigmoid"], "C": range(1,500,10), 'gamma': ['auto',1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6]}
