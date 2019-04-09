@@ -57,19 +57,14 @@ def nested_CV(X_train,y_train, estimator, param):
     print("Mean of outer loop: "+str(np.mean(out_scores))+" std: "+str(np.std(out_scores)))
     return out_scores
     
-def nested_SVM(data,labels):
+def nested_SVM(data,labels, hyperparameters):
     print(data.shape)
     data = data[data["Nclone"] < 50]
     print(data.shape)
     df_data = data.drop(["Chromosome", "Start", "End", "Nclone"], axis = 1).transpose()
     labels = labels.set_index(labels.loc[:,"Sample"]).drop("Sample", axis = 1)
         
-    # hyperparameter range for SVM
-    tuned_parameters = [{'kernel': ['rbf'], 'gamma': ["auto",1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6], 'C': range(1,500,10)},
-    {'kernel': ['linear'], 'C': range(1,500,10)},
-    {'kernel': ["sigmoid"], "C": range(1,500,10), 'gamma': ['auto',1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6]}
-    ]
-    SVM_dist = nested_CV(df_data,labels, SVC(), tuned_parameters)
+    SVM_dist = nested_CV(df_data,labels, SVC(), hyperparameters)
 
 def calculate_pca(data,labels):
     
@@ -87,6 +82,7 @@ def calculate_pca(data,labels):
     # add disease type
     finalDf = pd.concat([principalDf, labels[["Subgroup"]]],ignore_index=False, axis = 1)
     
+    # plot PC1 vs PC2
     pca_color=sns.pairplot(x_vars=["principal component 1"], y_vars=["principal component 2"], data=finalDf, hue="Subgroup", height=5)
     path_PCA_figure_color = "../images/PCA_color.png"
     pca_color.set(xlabel = "PC1 (" + str(round(pca.explained_variance_ratio_[0]*100, 1)) + "%)")
@@ -138,6 +134,12 @@ def main():
         
     if args.resample:
         resample_data()
+        
+    # hyperparameter range for SVM
+    tuned_parameters = [{'kernel': ['rbf'], 'gamma': ["auto",1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6], 'C': range(1,500,10)},
+    {'kernel': ['linear'], 'C': range(1,500,10)},
+    {'kernel': ["sigmoid"], "C": range(1,500,10), 'gamma': ['auto',1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6]}
+    ]
     
     # Load data 
     data, labels = load_data(args.input_file, args.label_file)
@@ -146,7 +148,7 @@ def main():
     if args.PCA:
         calculate_pca(data, labels)
     
-    nested_SVM(data,labels)
+    nested_SVM(data,labels, tuned_parameters)
 
 if __name__ == '__main__':
     main()
