@@ -14,14 +14,20 @@ from sklearn.metrics import accuracy_score, auc, confusion_matrix, cohen_kappa_s
 import argparse
 from sklearn.decomposition import PCA
 import seaborn as sns
-from sklearn.svm import SVC
+from sklearn.svm import SVC, LinearSVC
 from sklearn import svm
 from numpy import ravel
 from sklearn.model_selection import GridSearchCV,cross_val_score,KFold,StratifiedKFold
 from sklearn.feature_selection import SelectFromModel
 
-def L1_selection(X_train):
-    lsvc = Linear
+def l1_selection(X_train, y_train):
+    lsvc = LinearSVC(C=1, penalty = "l1", dual = False).fit(X_train,y_train)
+    model = SelectFromModel(lsvc, prefit=True)
+    X_new = model.transform(X_train)
+    print("L1: X_train amount of features form " + str(X_train.shape[1]) + " to " + str(X_new.shape[1]))
+
+
+    return pd.DataFrame(X_new)
     
 
 def calculate_SVM(data, labels):
@@ -39,7 +45,9 @@ def nested_CV(X_train,y_train, estimator, param, use_stratified):
     in_winner_param=[]
     out_n_splits = 5
     in_n_splits = 4
-    
+
+    X_train = l1_selection(X_train, ravel(y_train))
+
     if use_stratified:
         # StratifiedKFold = Equal amount of each class per fold (uncomment next line to use)
         out_cv = StratifiedKFold(n_splits=out_n_splits, shuffle=True, random_state=state)
@@ -70,12 +78,11 @@ def nested_CV(X_train,y_train, estimator, param, use_stratified):
     return out_scores
     
 def nested_SVM(data,labels, hyperparameters, use_stratified):
-    print("Amount of features" + str(data.shape[0]))
-    data = data[data["Nclone"] < 50]
-    print(data.shape)
+    print("Amount of features " + str(data.shape[0]))
+
     df_data = data.drop(["Chromosome", "Start", "End", "Nclone"], axis = 1).transpose()
     labels = labels.set_index(labels.loc[:,"Sample"]).drop("Sample", axis = 1)
-        
+    print(df_data.shape)
     SVM_dist = nested_CV(df_data,labels, SVC(), hyperparameters, use_stratified)
 
 def calculate_pca(data,labels):
