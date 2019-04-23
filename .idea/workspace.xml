@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="be18cbd4-9e23-455a-a9f7-35e73700474a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/other.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/Main.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/Main.py" afterDir="false" />
-    </list>
+    <list default="true" id="be18cbd4-9e23-455a-a9f7-35e73700474a" name="Default Changelist" comment="update L1 feature selection" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,6 +26,7 @@
     <session id="1265026129">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
+          <entry key="project.closed" value="1" />
           <entry key="project.open.time.2" value="1" />
           <entry key="project.opened" value="1" />
         </counts>
@@ -48,10 +45,12 @@
         <counts>
           <entry key="Python Console" value="4" />
           <entry key="py" value="396" />
+          <entry key="txt" value="33" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
+          <entry key="PLAIN_TEXT" value="33" />
           <entry key="Python" value="400" />
         </counts>
       </usages-collector>
@@ -62,7 +61,7 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/scripts/Main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
+            <state relative-caret-position="-1615">
               <caret line="48" column="4" selection-start-line="48" selection-start-column="4" selection-end-line="48" selection-end-column="4" />
               <folding>
                 <element signature="e#24#35#0" expanded="true" />
@@ -200,6 +199,14 @@
       <option name="presentableId" value="Default" />
       <updated>1556018524664</updated>
     </task>
+    <task id="LOCAL-00001" summary="update L1 feature selection">
+      <created>1556022160399</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1556022160399</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TodoView">
@@ -244,6 +251,10 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="update L1 feature selection" />
+    <option name="LAST_COMMIT_MESSAGE" value="update L1 feature selection" />
+  </component>
   <component name="editorHistoryManager">
     <entry file="file://$USER_HOME$/AppData/Roaming/Python/Python37/site-packages/sklearn/utils/validation.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -254,7 +265,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/scripts/Main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
+        <state relative-caret-position="-1615">
           <caret line="48" column="4" selection-start-line="48" selection-start-column="4" selection-end-line="48" selection-end-column="4" />
           <folding>
             <element signature="e#24#35#0" expanded="true" />
