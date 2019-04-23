@@ -18,7 +18,11 @@ from sklearn.svm import SVC
 from sklearn import svm
 from numpy import ravel
 from sklearn.model_selection import GridSearchCV,cross_val_score,KFold,StratifiedKFold
+from sklearn.feature_selection import SelectFromModel
 
+def L1_selection(X_train):
+    lsvc = Linear
+    
 
 def calculate_SVM(data, labels):
     df_data = data.drop(["Chromosome", "Start", "End", "Nclone"], axis = 1).transpose()
