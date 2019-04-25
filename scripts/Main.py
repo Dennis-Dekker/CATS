@@ -45,7 +45,7 @@ def nested_cv(x_train, y_train, estimator, param, use_stratified):
         x_train_out, x_test_out = x_train.iloc[index_train_out], x_train.iloc[index_test_out]
         y_train_out, y_test_out = y_train.iloc[index_train_out], y_train.iloc[index_test_out]
 
-        in_cv = KFold(n_splits=in_n_splits, shuffle=True, random_state=state)
+        in_cv = StratifiedKFold(n_splits=in_n_splits, shuffle=True, random_state=state)
         # inner loop for hyperparameters tuning
         gscv = GridSearchCV(estimator=estimator, param_grid=param, cv=in_cv, verbose=1, n_jobs=-1)
         # train a model with each set of parameters
