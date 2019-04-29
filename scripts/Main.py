@@ -14,23 +14,63 @@ from sklearn.model_selection import GridSearchCV, KFold, StratifiedKFold
 from sklearn.svm import SVC, LinearSVC
 
 
-def l1_selection(x_train, y_train):
-    lsvc = LinearSVC(C=1, penalty="l1", dual=False).fit(x_train, y_train)
+class Model:
+    def __init__(self, svm, c_l1, best_features, accuracy_validate, best_params):
+        self.svm = svm
+        self.c_l1 = c_l1
+        self.best_features = best_features
+        self.accuracy_validate = accuracy_validate
+        self.best_params = best_params
+
+
+def l1_selection(x_train, y_train, c_li):
+    lsvc = LinearSVC(C=c_li, penalty="l1", dual=False).fit(x_train, y_train)
     model = SelectFromModel(lsvc, prefit=True)
     x_new = model.transform(x_train)
     print("L1: x_train amount of features form " + str(x_train.shape[1]) + " to " + str(x_new.shape[1]))
 
-    return pd.DataFrame(x_new)
+    return pd.DataFrame(x_new), model
 
 
-def nested_cv(x_train, y_train, estimator, param, use_stratified):
-    state = 1
-    out_scores = []
-    in_winner_param = []
+def inner_cv(x_train, y_train, in_n_splits, state, estimator, param):
+    c_l1_param = [0.01, 0.1, 1, 10]
+    models = []
+    for c_l1 in c_l1_param:
+        x_train_in, best_features = l1_selection(x_train, ravel(y_train), c_l1)
+
+        in_cv = StratifiedKFold(n_splits=in_n_splits, shuffle=True, random_state=state)
+        # inner loop for hyperparameters tuning
+        gscv = GridSearchCV(estimator=estimator, param_grid=param, cv=in_cv, verbose=1, n_jobs=-1)
+
+        # train a model with each set of parameters
+        gscv.fit(x_train_in, ravel(y_train))
+        best_hyperparameters = gscv.best_params_
+        val_score = gscv.best_score_
+
+        model = Model(gscv, c_l1, best_features, val_score, best_hyperparameters)
+        models.append(model)
+    highest_model = models[0]
+    highest_model_score = models[0].accuracy_validate
+
+    for model in models:
+        current_score = model.accuracy_validate
+        if current_score > highest_model_score:
+            highest_model = model
+            highest_model_score = current_score
+
+    best_parameters = highest_model.best_params
+    c_l1 = highest_model.c_l1
+    best_features = highest_model.best_features
+    validation_score = highest_model_score
+
+    return best_parameters, c_l1, best_features, validation_score
+
+
+def outer_cv(x_train, y_train, estimator, param, use_stratified):
+    state = 7
     out_n_splits = 5
     in_n_splits = 4
-
-    x_train = l1_selection(x_train, ravel(y_train))
+    models = []
 
     if use_stratified:
         # StratifiedKFold = Equal amount of each class per fold (uncomment next line to use)
@@ -45,64 +85,36 @@ def nested_cv(x_train, y_train, estimator, param, use_stratified):
         x_train_out, x_test_out = x_train.iloc[index_train_out], x_train.iloc[index_test_out]
         y_train_out, y_test_out = y_train.iloc[index_train_out], y_train.iloc[index_test_out]
 
-        in_cv = StratifiedKFold(n_splits=in_n_splits, shuffle=True, random_state=state)
-        # inner loop for hyperparameters tuning
-        gscv = GridSearchCV(estimator=estimator, param_grid=param, cv=in_cv, verbose=1, n_jobs=-1)
-        # train a model with each set of parameters
-        gscv.fit(x_train_out, ravel(y_train_out))
-        # predict using the best set of hyperparameters
-        prediction = gscv.predict(x_test_out)
-        in_winner_param.append(gscv.best_params_)
-        out_scores.append(accuracy_score(prediction, y_test_out))
-        print("\nBest inner accuracy of fold " + str(i + 1) + ": " + str(gscv.best_score_) + "\n")
+        best_parameters, c_l1, best_features, validation_score = inner_cv(x_train_out, y_train_out, in_n_splits, state,
+                                                                          estimator, param)
 
-    for i in zip(in_winner_param, out_scores):
-        print(i)
-    print("Mean of outer loop: " + str(np.mean(out_scores)) + " std: " + str(np.std(out_scores)))
-    return out_scores
+        x_train_out_transformed = best_features.transform(x_train_out)
+        x_test_out_transformed = best_features.transform(x_test_out)
+
+        c = best_parameters["C"]
+        degree = best_parameters['degree']
+        gamma = best_parameters['gamma']
+        kernel = best_parameters['kernel']
+
+        svc = SVC(C=c, kernel=kernel, degree=degree, gamma=gamma)
+        svc.fit(x_train_out_transformed, y_train_out)
+        val_score = svc.score(x_test_out_transformed, y_test_out)
+        model = Model(svc, c_l1, best_features, val_score, best_parameters)
+        models.append(model)
+
+    return models
 
 
-def apply_feature_selection(x_train, y_train, feature_selection):
-    pass
-
-
-def nested_svm(data, labels, hyperparameters, use_stratified, feature_selection):
+def nested_svm(data, labels, hyperparameters, use_stratified):
     print("Amount of features " + str(data.shape[0]))
 
     df_data = data.drop(["Chromosome", "Start", "End", "Nclone"], axis=1).transpose()
     labels = labels.set_index(labels.loc[:, "Sample"]).drop("Sample", axis=1)
     print(df_data.shape)
 
-    # working on feature selection integration.
-    # df_data = apply_feature_selection(x_train, y_train, feature_selection)
-
-    SVM_dist = nested_cv(df_data, labels, SVC(), hyperparameters, use_stratified)
-
-
-def calculate_pca(data, labels):
-    # remove annotation from data except sample name
-    df_data = data.drop(["Chromosome", "Start", "End", "Nclone"], axis=1).transpose()
-    labels = labels.set_index(labels.loc[:, "Sample"]).drop("Sample", axis=1)
-
-    # PCA
-    pca = PCA(n_components=3)
-    principal_components = pca.fit_transform(df_data)
-    principal_df = pd.DataFrame(data=principal_components, columns=['principal component 1', 'principal component 2',
-                                                                    'principal component 3'])
-    # put sample name back
-    principal_df = principal_df.set_index(df_data.index.values)
-    # add disease type
-    final_df = pd.concat([principal_df, labels[["Subgroup"]]], ignore_index=False, axis=1)
-
-    # plot PC1 vs PC2
-    pca_color = sns.pairplot(x_vars=["principal component 1"], y_vars=["principal component 2"], data=final_df,
-                             hue="Subgroup", height=5)
-    path_pca_figure_color = "../images/PCA_color.png"
-    pca_color.set(xlabel="PC1 (" + str(round(pca.explained_variance_ratio_[0] * 100, 1)) + "%)")
-    pca_color.set(ylabel="PC2 (" + str(round(pca.explained_variance_ratio_[1] * 100, 1)) + "%)")
-    plt.show()
-    pca_color.savefig(path_pca_figure_color)
-    print("Image saved to: " + path_pca_figure_color)
+    models = outer_cv(df_data, labels, SVC(), hyperparameters, use_stratified)
+    for model in models:
+        print(model.best_params, model.c_l1, model.accuracy_validate)
 
 
 def load_data(input_file, label_file):
@@ -111,26 +123,17 @@ def load_data(input_file, label_file):
     return data, labels
 
 
-def resample_data():
-    print("resampled... (not implemented)")
-    return
-
-
 def main():
     """Main function"""
 
     # Parser
     parser = argparse.ArgumentParser(description='Test differnt feature selection and machine learning methods')
-    parser.add_argument('feature_selection_method', choices=['No', 'ANOVA', 'L1', 'RFECV', 'all'],
-                        help='Feature selection method to use')
-    parser.add_argument('-r', '--resample', action="store_true", help='resample test/train data')
     parser.add_argument("-i", "--input", dest="input_file",
                         type=str, help="train data file", metavar="FILE")
     parser.add_argument("-l", "--labels", dest="label_file",
                         type=str, help="label file", metavar="FILE")
     parser.add_argument("-o", "--output", dest="output_folder",
                         type=str, help="output folder", metavar="FOLDER")
-    parser.add_argument("-PCA", action="store_true", help="show pca of data")
     parser.add_argument("-unStrat", "--use_unstratified", action="store_false",
                         help="use unstratified k-fold splitting")
 
@@ -151,24 +154,17 @@ def main():
         print("No output folder given, using default input file:\t" + default_output_folder)
         args.output_folder = default_output_folder
 
-    if args.resample:
-        resample_data()
-
     # hyperparameter range for SVM
-    tuned_parameters = [
-        {'kernel': ['rbf'], 'gamma': ["auto", 1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6], 'C': range(1, 500, 10)},
-        {'kernel': ['linear'], 'C': range(1, 500, 10)},
-        {'kernel': ["sigmoid"], "C": range(1, 500, 10), 'gamma': ['auto', 1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6]}
-    ]
+    tuned_parameters = [{"C": [0.1, 1, 10, 100],
+                         "kernel": ['linear', 'rbf', 'sigmoid', 'poly'],
+                         "degree": [0, 1, 2, 3, 4],
+                         "gamma": ['auto']}
+                        ]
 
     # Load data 
     data, labels = load_data(args.input_file, args.label_file)
 
-    # Simple pca
-    if args.PCA:
-        calculate_pca(data, labels)
-
-    nested_svm(data, labels, tuned_parameters, args.use_unstratified, args.feature_selection_method)
+    nested_svm(data, labels, tuned_parameters, args.use_unstratified)
 
 
 if __name__ == '__main__':
