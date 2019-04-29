@@ -2,16 +2,15 @@
 
 import argparse
 
-import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
-import seaborn as sns
 from numpy import ravel
-from sklearn.decomposition import PCA
 from sklearn.feature_selection import SelectFromModel
-from sklearn.metrics import accuracy_score
 from sklearn.model_selection import GridSearchCV, KFold, StratifiedKFold
 from sklearn.svm import SVC, LinearSVC
+from sklearn.multiclass import OneVsRestClassifier
+from sklearn.metrics import roc_curve, auc
+from sklearn.preprocessing import label_binarize
+import matplotlib.pyplot as plt
 
 
 class Model:
@@ -38,7 +37,7 @@ def inner_cv(x_train, y_train, in_n_splits, state, estimator, param):
     for c_l1 in c_l1_param:
         x_train_in, best_features = l1_selection(x_train, ravel(y_train), c_l1)
 
-        in_cv = StratifiedKFold(n_splits=in_n_splits, shuffle=True, random_state=state)
+        in_cv = StratifiedKFold(n_splits=in_n_splits, shuffle=False, random_state=state)
         # inner loop for hyperparameters tuning
         gscv = GridSearchCV(estimator=estimator, param_grid=param, cv=in_cv, verbose=1, n_jobs=-1)
 
@@ -63,6 +62,8 @@ def inner_cv(x_train, y_train, in_n_splits, state, estimator, param):
     best_features = highest_model.best_features
     validation_score = highest_model_score
 
+    print(best_parameters, validation_score)
+
     return best_parameters, c_l1, best_features, validation_score
 
 
@@ -71,14 +72,15 @@ def outer_cv(x_train, y_train, estimator, param, use_stratified):
     out_n_splits = 5
     in_n_splits = 4
     models = []
+    plot_number = 1
 
     if use_stratified:
         # StratifiedKFold = Equal amount of each class per fold (uncomment next line to use)
-        out_cv = StratifiedKFold(n_splits=out_n_splits, shuffle=True, random_state=state)
+        out_cv = StratifiedKFold(n_splits=out_n_splits, shuffle=False, random_state=state)
         print('Using stratified k-fold splitting, number of outer splits:\t' + str(out_n_splits))
     else:
         # Kfold = random amount of each class per fold
-        out_cv = KFold(n_splits=out_n_splits, shuffle=True, random_state=state)
+        out_cv = KFold(n_splits=out_n_splits, shuffle=False, random_state=state)
         print('Using unstratified k-fold splitting, number of outer splits:\t' + str(out_n_splits))
 
     for i, (index_train_out, index_test_out) in enumerate(out_cv.split(x_train, y_train)):
@@ -98,9 +100,48 @@ def outer_cv(x_train, y_train, estimator, param, use_stratified):
 
         svc = SVC(C=c, kernel=kernel, degree=degree, gamma=gamma)
         svc.fit(x_train_out_transformed, y_train_out)
-        val_score = svc.score(x_test_out_transformed, y_test_out)
+        val_score = svc.score(x_test_out_transformed, ravel(y_test_out))
         model = Model(svc, c_l1, best_features, val_score, best_parameters)
         models.append(model)
+
+        classes = ["HER2+", "HR+", "Triple Neg"]
+        y_train_out = label_binarize(y_train_out, classes=classes)
+        y_test_out = label_binarize(y_test_out, classes=classes)
+        n_classes = y_train_out.shape[1]
+        classifier = OneVsRestClassifier(SVC(kernel=model.best_params["kernel"], degree=model.best_params["degree"],
+                                             C=model.best_params["C"], gamma=model.best_params["gamma"],
+                                             probability=True, random_state=6))
+        y_score = classifier.fit(x_train_out_transformed,y_train_out).decision_function(x_test_out_transformed)
+
+        fpr = dict()
+        tpr = dict()
+        roc_auc = dict()
+        for i in range(n_classes):
+            fpr[i], tpr[i], _ = roc_curve(y_test_out[:, i], y_score[:, i])
+            roc_auc[i] = auc(fpr[i], tpr[i])
+
+        # Compute micro-average ROC curve and ROC area
+        fpr["micro"], tpr["micro"], _ = roc_curve(y_test_out.ravel(), y_score.ravel())
+        roc_auc["micro"] = auc(fpr["micro"], tpr["micro"])
+
+        plt.figure()
+        lw = 2
+        plt.plot(fpr[0], tpr[0], color='darkorange',
+                 lw=lw, label='%s (AUC = %0.2f)' % (classes[0], roc_auc[0]))
+        plt.plot(fpr[1], tpr[1], color='red',
+                 lw=lw, label='%s (AUC = %0.2f)' % (classes[1],roc_auc[1]))
+        plt.plot(fpr[2], tpr[2], color='blue',
+                 lw=lw, label='%s (AUC = %0.2f)' % (classes[2],roc_auc[2]))
+
+        plt.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
+        plt.xlim([0.0, 1.0])
+        plt.ylim([0.0, 1.05])
+        plt.xlabel('False Positive Rate')
+        plt.ylabel('True Positive Rate')
+        plt.title('ROC plot L1 ')
+        plt.legend(loc="lower right")
+        plt.savefig("../images/L1_feature_selection/ROC_plot%s.png" % plot_number)
+        plot_number += 1
 
     return models
 
