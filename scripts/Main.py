@@ -67,7 +67,7 @@ def inner_cv(x_train, y_train, in_n_splits, state, estimator, param):
 
 
 def outer_cv(x_train, y_train, estimator, param, use_stratified):
-    state = 7
+    state = 6
     out_n_splits = 5
     in_n_splits = 4
     models = []
