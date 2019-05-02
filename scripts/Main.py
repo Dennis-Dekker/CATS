@@ -14,28 +14,30 @@ import matplotlib.pyplot as plt
 
 
 class Model:
-    def __init__(self, svm, c_l1, best_features, accuracy_validate, best_params):
+    def __init__(self, svm, c_l1, best_features, accuracy_validate, best_params, n_features):
         self.svm = svm
         self.c_l1 = c_l1
         self.best_features = best_features
         self.accuracy_validate = accuracy_validate
         self.best_params = best_params
+        self.n_features = n_features
 
 
 def l1_selection(x_train, y_train, c_li):
     lsvc = LinearSVC(C=c_li, penalty="l1", dual=False).fit(x_train, y_train)
     model = SelectFromModel(lsvc, prefit=True)
     x_new = model.transform(x_train)
+    n_features = x_new.shape[1]
     print("L1: x_train amount of features form " + str(x_train.shape[1]) + " to " + str(x_new.shape[1]))
 
-    return pd.DataFrame(x_new), model
+    return pd.DataFrame(x_new), model, n_features
 
 
 def inner_cv(x_train, y_train, in_n_splits, state, estimator, param):
     c_l1_param = [0.01, 0.1, 1, 10]
     models = []
     for c_l1 in c_l1_param:
-        x_train_in, best_features = l1_selection(x_train, ravel(y_train), c_l1)
+        x_train_in, best_features, n_features = l1_selection(x_train, ravel(y_train), c_l1)
 
         in_cv = StratifiedKFold(n_splits=in_n_splits, shuffle=False, random_state=state)
         # inner loop for hyperparameters tuning
@@ -46,7 +48,7 @@ def inner_cv(x_train, y_train, in_n_splits, state, estimator, param):
         best_hyperparameters = gscv.best_params_
         val_score = gscv.best_score_
 
-        model = Model(gscv, c_l1, best_features, val_score, best_hyperparameters)
+        model = Model(gscv, c_l1, best_features, val_score, best_hyperparameters, n_features)
         models.append(model)
     highest_model = models[0]
     highest_model_score = models[0].accuracy_validate
@@ -101,7 +103,7 @@ def outer_cv(x_train, y_train, estimator, param, use_stratified):
         svc = SVC(C=c, kernel=kernel, degree=degree, gamma=gamma)
         svc.fit(x_train_out_transformed, y_train_out)
         val_score = svc.score(x_test_out_transformed, ravel(y_test_out))
-        model = Model(svc, c_l1, best_features, val_score, best_parameters)
+        model = Model(svc, c_l1, best_features, val_score, best_parameters, x_test_out_transformed.shape[1])
         models.append(model)
 
         classes = ["HER2+", "HR+", "Triple Neg"]
@@ -155,7 +157,7 @@ def nested_svm(data, labels, hyperparameters, use_stratified):
 
     models = outer_cv(df_data, labels, SVC(), hyperparameters, use_stratified)
     for model in models:
-        print(model.best_params, model.c_l1, model.accuracy_validate)
+        print(model.n_features, model.best_params, model.c_l1, model.accuracy_validate)
 
 
 def load_data(input_file, label_file):
