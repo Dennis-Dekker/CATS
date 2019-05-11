@@ -163,6 +163,20 @@ def nested_svm(data, labels, hyperparameters, use_stratified):
     for model in models:
         print(model.n_features, model.best_params, model.c_l1, model.accuracy_validate, model.iteration)
 
+    highest_model = models[0]
+    highest_model_score = models[0].accuracy_validate
+
+    for model in models:
+        current_score = model.accuracy_validate
+        if current_score > highest_model_score:
+            highest_model = model
+            highest_model_score = current_score
+
+    best_features = highest_model.best_features
+    validation_score = highest_model_score
+
+    print(best_features.get_support(), validation_score)
+
 
 def load_data(input_file, label_file):
     data = pd.read_csv(input_file, sep="\t")
