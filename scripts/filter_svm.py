@@ -98,6 +98,18 @@ def inner_cross_val(x, y, n_iterations):
     return best_parameters, n_features, best_features, validation_score
 
 
+def select_best_model(models):
+    highest_accuracy = 0
+
+    for i in range(len(models)):
+        model = models[i]
+        if model.accuracy_validate > highest_accuracy and model.accuracy_validate != 1.0:
+            highest_accuracy = model.accuracy_validate
+            best_model = model
+
+    return best_model
+
+
 def select_features(x_train, y_train, n_features):
     X_indices = np.arange(x_train.shape[-1])
     selector = SelectKBest(f_classif, k=n_features)
@@ -109,6 +121,32 @@ def select_features(x_train, y_train, n_features):
         edgecolor='black')
     #plt.show()
     return k_best
+
+
+def get_best_features(feature_scores, features, n_features):
+    highest_scores = []
+    highest_indeces = []
+
+    for i in range(n_features):
+        highest_score = 0
+        highest_index = 0
+        for j in range(feature_scores.size):
+            score = feature_scores[j]
+            index = j
+            print(score)
+            if score > highest_score and index not in highest_indeces:
+                highest_score = score
+                highest_index = index
+        highest_scores.append(highest_score)
+        highest_indeces.append(highest_index)
+
+    feature_df = features.iloc[:, highest_indeces]
+
+    print(highest_scores)
+    print(highest_indeces)
+    print(np.amax(feature_scores))
+    print(feature_df)
+    return feature_df
 
 
 def main():
@@ -126,6 +164,13 @@ def main():
     models = outer_cross_val(x,y,5)
     for model in models:
         print(model.accuracy_validate)
+        
+    best_model = select_best_model(models)
+    feature_scores = best_model.best_features.scores_
+    best_features = get_best_features(feature_scores, features, 10)
+    print(best_features)
+    print(best_model.accuracy_validate)
+    best_features.to_csv('best_features_filter_svm.csv')
 
 
 if __name__ == '__main__':
