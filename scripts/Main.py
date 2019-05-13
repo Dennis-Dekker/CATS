@@ -3,6 +3,7 @@
 import argparse
 
 import pandas as pd
+import numpy as np
 from numpy import ravel
 from sklearn.feature_selection import SelectFromModel
 from sklearn.model_selection import GridSearchCV, KFold, StratifiedKFold
@@ -14,7 +15,7 @@ import matplotlib.pyplot as plt
 
 
 class Model:
-    def __init__(self, svm, c_l1, best_features, accuracy_validate, best_params, n_features, iteration):
+    def __init__(self, svm, c_l1, best_features, accuracy_validate, best_params, n_features, iteration, lsvc, index):
         self.svm = svm
         self.c_l1 = c_l1
         self.best_features = best_features
@@ -22,6 +23,25 @@ class Model:
         self.best_params = best_params
         self.n_features = n_features
         self.iteration = iteration
+        self.lsvc = lsvc
+        self.index = index
+
+
+def plot_coefficients(classifier, feature_names, top_features=20):
+    coef = classifier.coef_.ravel()
+    top_positive_coefficients = np.argsort(coef)[-top_features:]
+    top_negative_coefficients = np.argsort(coef)[:top_features]
+    top_coefficients = np.hstack([top_negative_coefficients, top_positive_coefficients])
+    top_coefficients_index = top_coefficients / 3
+    top_coefficients_index = np.int_(np.floor(top_coefficients_index))
+    print(top_coefficients_index[0:5])
+    # create plot
+    plt.figure(figsize=(15, 5))
+    colors = ['red' if c < 0 else 'blue' for c in coef[top_coefficients]]
+    plt.bar(np.arange(2 * top_features), coef[top_coefficients], color=colors)
+    feature_names = np.array(feature_names)
+    plt.xticks(np.arange(1, 1 + 2 * top_features), feature_names[top_coefficients_index], rotation=60, ha='right')
+    plt.show()
 
 
 def l1_selection(x_train, y_train, c_li):
@@ -31,14 +51,14 @@ def l1_selection(x_train, y_train, c_li):
     n_features = x_new.shape[1]
     print("L1: x_train amount of features form " + str(x_train.shape[1]) + " to " + str(x_new.shape[1]))
 
-    return pd.DataFrame(x_new), model, n_features
+    return pd.DataFrame(x_new), model, n_features, lsvc, list(x_train)
 
 
 def inner_cv(x_train, y_train, in_n_splits, state, estimator, param, iteration):
     c_l1_param = [0.01, 0.1, 1, 10]
     models = []
     for c_l1 in c_l1_param:
-        x_train_in, best_features, n_features = l1_selection(x_train, ravel(y_train), c_l1)
+        x_train_in, best_features, n_features, lsvc, index = l1_selection(x_train, ravel(y_train), c_l1)
 
         in_cv = StratifiedKFold(n_splits=in_n_splits, shuffle=False, random_state=state)
         # inner loop for hyperparameters tuning
@@ -49,7 +69,7 @@ def inner_cv(x_train, y_train, in_n_splits, state, estimator, param, iteration):
         best_hyperparameters = gscv.best_params_
         val_score = gscv.best_score_
 
-        model = Model(gscv, c_l1, best_features, val_score, best_hyperparameters, n_features, iteration)
+        model = Model(gscv, c_l1, best_features, val_score, best_hyperparameters, n_features, iteration, lsvc, index)
         models.append(model)
     highest_model = models[0]
     highest_model_score = models[0].accuracy_validate
@@ -67,18 +87,18 @@ def inner_cv(x_train, y_train, in_n_splits, state, estimator, param, iteration):
 
     print(best_parameters, validation_score)
 
-    return best_parameters, c_l1, best_features, validation_score
+    return best_parameters, c_l1, best_features, validation_score, highest_model.lsvc, highest_model.index
 
 
 def outer_cv(x_train, y_train, estimator, param, use_stratified):
-    states = [6,5,4]
+    states = [6, 5, 4]
     out_n_splits = 5
     in_n_splits = 4
     models = []
     plot_number = 1
     iterations = 15
 
-    for iteration in range(3):
+    for iteration in range(int(iterations/out_n_splits)):
         state = states[iteration]
         if use_stratified:
             # StratifiedKFold = Equal amount of each class per fold (uncomment next line to use)
@@ -93,8 +113,9 @@ def outer_cv(x_train, y_train, estimator, param, use_stratified):
             x_train_out, x_test_out = x_train.iloc[index_train_out], x_train.iloc[index_test_out]
             y_train_out, y_test_out = y_train.iloc[index_train_out], y_train.iloc[index_test_out]
 
-            best_parameters, c_l1, best_features, validation_score = inner_cv(x_train_out, y_train_out, in_n_splits, state,
-                                                                              estimator, param, iteration)
+            best_parameters, c_l1, best_features, validation_score, lscv, index = inner_cv(x_train_out, y_train_out,
+                                                                                           in_n_splits, state,
+                                                                                           estimator, param, iteration)
 
             x_train_out_transformed = best_features.transform(x_train_out)
             x_test_out_transformed = best_features.transform(x_test_out)
@@ -107,7 +128,8 @@ def outer_cv(x_train, y_train, estimator, param, use_stratified):
             svc = SVC(C=c, kernel=kernel, degree=degree, gamma=gamma)
             svc.fit(x_train_out_transformed, y_train_out)
             val_score = svc.score(x_test_out_transformed, ravel(y_test_out))
-            model = Model(svc, c_l1, best_features, val_score, best_parameters, x_test_out_transformed.shape[1], iteration)
+            model = Model(svc, c_l1, best_features, val_score, best_parameters, x_test_out_transformed.shape[1],
+                          iteration, lscv, index)
             models.append(model)
 
             classes = ["HER2+", "HR+", "Triple Neg"]
@@ -117,14 +139,14 @@ def outer_cv(x_train, y_train, estimator, param, use_stratified):
             classifier = OneVsRestClassifier(SVC(kernel=model.best_params["kernel"], degree=model.best_params["degree"],
                                                  C=model.best_params["C"], gamma=model.best_params["gamma"],
                                                  probability=True, random_state=6))
-            y_score = classifier.fit(x_train_out_transformed,y_train_out).decision_function(x_test_out_transformed)
+            y_score = classifier.fit(x_train_out_transformed, y_train_out).decision_function(x_test_out_transformed)
 
             fpr = dict()
             tpr = dict()
             roc_auc = dict()
-            for i in range(n_classes):
-                fpr[i], tpr[i], _ = roc_curve(y_test_out[:, i], y_score[:, i])
-                roc_auc[i] = auc(fpr[i], tpr[i])
+            for n_class in range(n_classes):
+                fpr[n_class], tpr[n_class], _ = roc_curve(y_test_out[:, n_class], y_score[:, n_class])
+                roc_auc[n_class] = auc(fpr[n_class], tpr[n_class])
 
             # Compute micro-average ROC curve and ROC area
             fpr["micro"], tpr["micro"], _ = roc_curve(y_test_out.ravel(), y_score.ravel())
@@ -135,9 +157,9 @@ def outer_cv(x_train, y_train, estimator, param, use_stratified):
             plt.plot(fpr[0], tpr[0], color='darkorange',
                      lw=lw, label='%s (AUC = %0.2f)' % (classes[0], roc_auc[0]))
             plt.plot(fpr[1], tpr[1], color='red',
-                     lw=lw, label='%s (AUC = %0.2f)' % (classes[1],roc_auc[1]))
+                     lw=lw, label='%s (AUC = %0.2f)' % (classes[1], roc_auc[1]))
             plt.plot(fpr[2], tpr[2], color='blue',
-                     lw=lw, label='%s (AUC = %0.2f)' % (classes[2],roc_auc[2]))
+                     lw=lw, label='%s (AUC = %0.2f)' % (classes[2], roc_auc[2]))
 
             plt.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
             plt.xlim([0.0, 1.0])
@@ -147,6 +169,7 @@ def outer_cv(x_train, y_train, estimator, param, use_stratified):
             plt.title('ROC plot L1 ')
             plt.legend(loc="lower right")
             plt.savefig("../images/L1_feature_selection/ROC_plot%s.png" % plot_number)
+            plt.close()
             plot_number += 1
 
     return models
@@ -175,7 +198,9 @@ def nested_svm(data, labels, hyperparameters, use_stratified):
     best_features = highest_model.best_features
     validation_score = highest_model_score
 
-    print(best_features.get_support(), validation_score)
+    plot_coefficients(highest_model.lsvc, highest_model.index)
+
+    print(best_features, validation_score)
 
 
 def load_data(input_file, label_file):
