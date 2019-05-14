@@ -9,6 +9,7 @@
 
 import argparse
 import csv
+import pickle
 
 import pandas as pd
 from numpy import ravel
@@ -214,6 +215,10 @@ def main():
 
     # Predict labels test data
     predict_labels(best_model, test)
+
+    # Save model
+    with open('model.pkl', 'wb') as output:
+        pickle.dump(best_model, output, pickle.HIGHEST_PROTOCOL)
 
 
 if __name__ == '__main__':
