@@ -13,7 +13,8 @@ from sklearn import preprocessing
 import matplotlib.pyplot as plt
 import os
 
-
+"""This script will generate one file, Output_RFECV.txt whit the selected features and accuraccy(RFE) and the accuracy
+for the SVM, also for each kfold generates csv file with features ID of the selected features sorted by importance. """
 
 def adjust_data(data, labels):
 	#Transpose
@@ -123,9 +124,8 @@ def do_RFECV(data, labels, random_state):
         
         print('Original number of features :', len(X_train.columns))
         print("Number of features after elimination: %f [Acc: %.1f]" %(rfecv.n_features_, rfecv.grid_scores_[rfecv.n_features_])) 
-        path = "./Features_db/"
         df_best_f = X_data[X_data.columns[best_f]].transpose()
-        df_best_f.to_csv(os.path.join(path,str(k_iteration)+"-"+str(random_state)+'feature.csv'))
+        df_best_f.to_csv(str(k_iteration)+"-"+str(random_state)+'feature.csv')
         
         #Fit the SVC after feature selection
         fit_SVC(X_train_select, y_train, X_test_select, y_test, best_f)
@@ -142,7 +142,7 @@ def main(args):
     
     #Save print() output in file
     or_stdout = sys.stdout
-    file_out = open('./Features_db/Output_RFECV.txt', 'w')
+    file_out = open('Output_RFECV.txt', 'w')
     sys.stdout = file_out
     
     random_state=6#Starting with random seed 6
