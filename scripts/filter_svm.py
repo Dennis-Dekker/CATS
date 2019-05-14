@@ -34,26 +34,28 @@ def preprocess_y(y):
 
 
 def outer_cross_val(x, y, n_iterations):
+    random_states = [6, 5, 4]
     models = []
-
-    kf = StratifiedKFold(n_splits=n_iterations)
-    for train_index, test_index in kf.split(x, y):
-        x_train, x_test = x.iloc[train_index], x.iloc[test_index]
-        y_train, y_test = y[train_index], y[test_index]
-        best_parameters, n_features, best_features, validation_score = inner_cross_val(x_train, y_train, 4)
-        # get the selected features for the train and test set
-        x_train_transformed = best_features.transform(x_train)
-        x_test_transformed = best_features.transform(x_test)
-        # get the best parameters
-        c = best_parameters['C']
-        degree = best_parameters['degree']
-        gamma = best_parameters['gamma']
-        kernel = best_parameters['kernel']
-        svc = SVC(C=c, kernel=kernel, degree=degree, gamma=gamma)
-        svc.fit(x_train_transformed, y_train)
-        val_score = svc.score(x_test_transformed, y_test)
-        model = Model(svc, n_features, best_features, val_score, best_parameters)
-        models.append(model)
+    
+    for state in random_states:
+        kf = StratifiedKFold(n_splits=n_iterations, random_state=state)
+        for train_index, test_index in kf.split(x, y):
+            x_train, x_test = x.iloc[train_index], x.iloc[test_index]
+            y_train, y_test = y[train_index], y[test_index]
+            best_parameters, n_features, best_features, validation_score = inner_cross_val(x_train, y_train, 4)
+            # get the selected features for the train and test set
+            x_train_transformed = best_features.transform(x_train)
+            x_test_transformed = best_features.transform(x_test)
+            # get the best parameters
+            c = best_parameters['C']
+            degree = best_parameters['degree']
+            gamma = best_parameters['gamma']
+            kernel = best_parameters['kernel']
+            svc = SVC(C=c, kernel=kernel, degree=degree, gamma=gamma)
+            svc.fit(x_train_transformed, y_train)
+            val_score = svc.score(x_test_transformed, y_test)
+            model = Model(svc, n_features, best_features, val_score, best_parameters)
+            models.append(model)
     return models
 
 
