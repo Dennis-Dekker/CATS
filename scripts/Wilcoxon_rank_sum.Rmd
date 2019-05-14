@@ -9,22 +9,26 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+# Data
+```{r}
+baseline_2 = c(0.636, 0.476, 0.684, 0.684, 0.789, 0.773, 0.619, 0.684, 0.684, 0.684, 0.636, 0.619, 0.789, 0.684, 0.789)
+anova_2 = c(0.818, 0.762, 1.0, 0.842, 0.842, 0.773, 0.667, 0.895, 0.842, 0.737, 0.773, 0.667, 0.895, 0.789, 0.737)
+l1_regularization_2 = c(0.727, 0.762, 0.842, 0.842, 0.842, 0.727, 0.762, 0.947, 0.842, 0.842, 0.773, 0.667, 0.947, 0.895, 0.842)
+recursive_2 = c(0.8,0.85,0.85,0.75,0.8,0.9,0.7,0.9,0.75,0.7,0.7,0.75,0.85,0.8,0.85)
+mean(recursive_2)
+mean(l1_regularization_2)
+sd(recursive_2)
+sd(l1_regularization_2)
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r}
+wilcox.test(baseline_2, anova_2) 
+```
+```{r}
+wilcox.test(baseline_2, l1_regularization_2) 
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r}
+wilcox.test(recursive_2, l1_regularization_2) 
+```
