@@ -58,7 +58,7 @@ def l1_selection(x_train, y_train, c_li):
     :return: Train data with selected features, the linear model and amount of features selected.
     """
     # Train model
-    lsvc = LinearSVC(C=c_li, penalty="l1", dual=False).fit(x_train, y_train)
+    lsvc = LinearSVC(C=c_li, penalty="l1", dual=False, max_iter=100000).fit(x_train, y_train)
 
     # Select best features and apply filter on train data
     model = SelectFromModel(lsvc, prefit=True)
@@ -119,11 +119,13 @@ def hyper_par_sel(x_train, y_train, estimator, param):
     best_parameters = highest_model.best_params
     c_l1 = highest_model.c_l1
     validation_score = highest_model_score
+    n_features = highest_model.n_features
 
     print("\n",
           "Best hyper parameters:\t", best_parameters, "\n",
           "Validation score: \t", validation_score, "\n",
-          "L1 C parameter: \t", c_l1)
+          "L1 C parameter: \t", c_l1, "\n",
+          "Number of features: \t", n_features)
 
     return highest_model
 
