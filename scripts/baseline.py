@@ -2,15 +2,13 @@
 
 
 import argparse
-import pandas as pd
+
 import numpy as np
+import pandas as pd
 from numpy import ravel
-from sklearn.feature_selection import SelectFromModel
-from sklearn.model_selection import GridSearchCV, KFold, StratifiedKFold
-from sklearn.svm import SVC, LinearSVC
-from sklearn.multiclass import OneVsRestClassifier
 from scipy import stats
-import math
+from sklearn.model_selection import GridSearchCV, StratifiedKFold
+from sklearn.svm import SVC
 
 
 class Model:
@@ -23,7 +21,6 @@ class Model:
 
 def inner_cv(x_train, y_train, in_n_splits, state, estimator, param):
     """ Inner cross validation """
-
 
     models = []
 
@@ -48,7 +45,6 @@ def outer_cv(x_train, y_train, estimator, param, state):
 
     out_n_splits = 5
     in_n_splits = 4
-    plot_number = 1
     models = []
 
     # Use stratified KFold CV
@@ -60,7 +56,7 @@ def outer_cv(x_train, y_train, estimator, param, state):
         y_train_out, y_test_out = y_train.iloc[index_train_out], y_train.iloc[index_test_out]
 
         best_parameters, validation_score = inner_cv(x_train_out, y_train_out, in_n_splits, state,
-                                                 estimator, param)
+                                                     estimator, param)
 
         c = best_parameters["C"]
         degree = best_parameters['degree']
