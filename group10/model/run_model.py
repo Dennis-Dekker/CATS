@@ -26,6 +26,7 @@ import pickle
 import csv
 import pandas as pd
 
+
 # Needed to open the .pkl file
 class Model:
     def __init__(self, svm, c_l1, best_features, accuracy_validate, best_params, n_features):

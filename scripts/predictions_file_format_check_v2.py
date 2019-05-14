@@ -9,7 +9,7 @@
 import sys
 
 # Constants
-LINES_NEEDED = 58 #When you run it on your final file for submission, be sure you change this number to 58!
+LINES_NEEDED = 58  # When you run it on your final file for submission, be sure you change this number to 58!
 HEADER = "\"Sample\"\t\"Subgroup\""
 NO_COLS = 2
 
@@ -21,19 +21,19 @@ def get_filename():
     except:
         sys.exit('\nERROR: No file given\n')
 
-    return(sys.argv[1])
+    return (sys.argv[1])
 
 
 # Load prediction file
 def load_linesplit_predictions(filename):
     # Load file and split in lines
     try:
-        prediction_object = open(filename,'r')
+        prediction_object = open(filename, 'r')
     except:
         sys.exit("\nERROR: Something went wrong when trying to load the file. Is the filename / path correct?\n")
     prediction_text = prediction_object.read()
     pred_linesplit = prediction_text.splitlines()
-    return(pred_linesplit)
+    return (pred_linesplit)
 
 
 # Determine if the number of predictions is correct
@@ -42,23 +42,23 @@ def determine_correct_lines(pred_linesplit):
 
     if correct_lines:
         correct_lines_string = 'Correct'
-    else: 
+    else:
         correct_lines_string = 'INCORRECT'
-    
-    return(correct_lines_string)
+
+    return correct_lines_string
 
 
 # Determine if header is correct
 def determine_correct_header(pred_linesplit):
     header = pred_linesplit[0]
     correct_header = header == HEADER
-    
+
     if correct_header:
         correct_header_string = 'Correct'
     else:
         correct_header_string = 'INCORRECT'
 
-    return(correct_header_string)
+    return correct_header_string
 
 
 # Determine if amount of columns is correct
@@ -74,22 +74,21 @@ def determine_correct_cols(pred_linesplit):
         correct_cols_string = 'Correct'
     else:
         correct_cols_string = 'INCORRECT'
-    
-    return(correct_cols_string)
+
+    return (correct_cols_string)
 
 
 # A command line print statement if correct results are obtained
 def print_statement(correct_lines_string,
-        correct_cols_string,
-        correct_header_string):
-
-
+                    correct_cols_string,
+                    correct_header_string):
     print("The amount of lines in you file are: " +
-            correct_lines_string + "\n" +
-            "The amount of columns in your file are:"+
-            correct_cols_string + "\n" +
-            "The header in your file is: " +
-            correct_header_string)
+          correct_lines_string + "\n" +
+          "The amount of columns in your file are:" +
+          correct_cols_string + "\n" +
+          "The header in your file is: " +
+          correct_header_string)
+
 
 # Main function
 def main():
@@ -99,14 +98,9 @@ def main():
     correct_cols_string = determine_correct_cols(pred_linesplit)
     correct_header_string = determine_correct_header(pred_linesplit)
     print_statement(correct_lines_string,
-            correct_cols_string,
-            correct_header_string)
+                    correct_cols_string,
+                    correct_header_string)
+
 
 if __name__ == '__main__':
     main()
-
-
-
-
-
-
