@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+from statistics import mean
 
 import pandas as pd
 import numpy as np
@@ -27,14 +28,15 @@ class Model:
         self.index = index
 
 
-def plot_coefficients(classifier, feature_names, top_features=20):
-    coef = classifier.coef_.ravel()
+def plot_coefficients(classifier, feature_names, top_features=10):
+    coef = np.array([mean(x) for x in zip(map(abs, classifier.coef_[0]), map(abs, classifier.coef_[1]), map(abs, classifier.coef_[2]))])
+    print(coef)
     top_positive_coefficients = np.argsort(coef)[-top_features:]
     top_negative_coefficients = np.argsort(coef)[:top_features]
     top_coefficients = np.hstack([top_negative_coefficients, top_positive_coefficients])
-    top_coefficients_index = top_coefficients / 3
+    top_coefficients_index = top_coefficients
     top_coefficients_index = np.int_(np.floor(top_coefficients_index))
-    print(top_coefficients_index[0:5])
+    print(top_coefficients_index)
     # create plot
     plt.figure(figsize=(15, 5))
     colors = ['red' if c < 0 else 'blue' for c in coef[top_coefficients]]
@@ -43,9 +45,11 @@ def plot_coefficients(classifier, feature_names, top_features=20):
     plt.xticks(np.arange(1, 1 + 2 * top_features), feature_names[top_coefficients_index], rotation=60, ha='right')
     plt.show()
 
+    return np.hstack([top_positive_coefficients])
 
-def l1_selection(x_train, y_train, c_li):
-    lsvc = LinearSVC(C=c_li, penalty="l1", dual=False).fit(x_train, y_train)
+
+def l1_selection(x_train, y_train, c_li, state):
+    lsvc = LinearSVC(C=c_li, penalty="l1", dual=False, random_state=state+1).fit(x_train, y_train)
     model = SelectFromModel(lsvc, prefit=True)
     x_new = model.transform(x_train)
     n_features = x_new.shape[1]
@@ -58,9 +62,9 @@ def inner_cv(x_train, y_train, in_n_splits, state, estimator, param, iteration):
     c_l1_param = [0.01, 0.1, 1, 10]
     models = []
     for c_l1 in c_l1_param:
-        x_train_in, best_features, n_features, lsvc, index = l1_selection(x_train, ravel(y_train), c_l1)
+        x_train_in, best_features, n_features, lsvc, index = l1_selection(x_train, ravel(y_train), c_l1, state)
 
-        in_cv = StratifiedKFold(n_splits=in_n_splits, shuffle=False, random_state=state)
+        in_cv = StratifiedKFold(n_splits=in_n_splits, shuffle=True, random_state=state)
         # inner loop for hyperparameters tuning
         gscv = GridSearchCV(estimator=estimator, param_grid=param, cv=in_cv, verbose=1, n_jobs=-1)
 
@@ -102,11 +106,11 @@ def outer_cv(x_train, y_train, estimator, param, use_stratified):
         state = states[iteration]
         if use_stratified:
             # StratifiedKFold = Equal amount of each class per fold (uncomment next line to use)
-            out_cv = StratifiedKFold(n_splits=out_n_splits, shuffle=False, random_state=state)
+            out_cv = StratifiedKFold(n_splits=out_n_splits, shuffle=True, random_state=state)
             print('Using stratified k-fold splitting, number of outer splits:\t' + str(out_n_splits))
         else:
             # Kfold = random amount of each class per fold
-            out_cv = KFold(n_splits=out_n_splits, shuffle=False, random_state=state)
+            out_cv = KFold(n_splits=out_n_splits, shuffle=True, random_state=state)
             print('Using unstratified k-fold splitting, number of outer splits:\t' + str(out_n_splits))
 
         for i, (index_train_out, index_test_out) in enumerate(out_cv.split(x_train, y_train)):
@@ -182,10 +186,13 @@ def nested_svm(data, labels, hyperparameters, use_stratified):
     labels = labels.set_index(labels.loc[:, "Sample"]).drop("Sample", axis=1)
     print(df_data.shape)
 
+    calc_mean = []
     models = outer_cv(df_data, labels, SVC(), hyperparameters, use_stratified)
     for model in models:
         print(model.n_features, model.best_params, model.c_l1, model.accuracy_validate, model.iteration)
+        calc_mean.append(model.accuracy_validate)
 
+    print(mean(calc_mean))
     highest_model = models[0]
     highest_model_score = models[0].accuracy_validate
 
@@ -198,7 +205,10 @@ def nested_svm(data, labels, hyperparameters, use_stratified):
     best_features = highest_model.best_features
     validation_score = highest_model_score
 
-    plot_coefficients(highest_model.lsvc, highest_model.index)
+    top_index = plot_coefficients(highest_model.lsvc, highest_model.index)
+
+    for i in top_index:
+        print(data.Chromosome[i], data.Start[i], data.End[i])
 
     print(best_features, validation_score)
 

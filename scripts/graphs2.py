@@ -81,7 +81,8 @@ label_diff(0,1,'p=0.0028',ind,menMeans)
 label_diff(0,2,'p=0.0002',ind,menMeans)
 label_diff(0,3,'p=0.0006',ind,menMeans)
 
-
+plt.ylabel("Accuracy")
+plt.xlabel("Feature selection method")
 plt.ylim(top=1.15)
 plt.xticks(ind, labels, color='k')
 ax.yaxis.grid(True)

@@ -2,7 +2,26 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="be18cbd4-9e23-455a-a9f7-35e73700474a" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/scripts/baseline.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/baseline.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/L1_feature_selection/ROC_plot1.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/L1_feature_selection/ROC_plot1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/L1_feature_selection/ROC_plot10.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/L1_feature_selection/ROC_plot10.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/L1_feature_selection/ROC_plot11.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/L1_feature_selection/ROC_plot11.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/L1_feature_selection/ROC_plot12.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/L1_feature_selection/ROC_plot12.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/L1_feature_selection/ROC_plot13.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/L1_feature_selection/ROC_plot13.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/L1_feature_selection/ROC_plot14.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/L1_feature_selection/ROC_plot14.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/L1_feature_selection/ROC_plot15.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/L1_feature_selection/ROC_plot15.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/L1_feature_selection/ROC_plot2.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/L1_feature_selection/ROC_plot2.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/L1_feature_selection/ROC_plot3.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/L1_feature_selection/ROC_plot3.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/L1_feature_selection/ROC_plot4.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/L1_feature_selection/ROC_plot4.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/L1_feature_selection/ROC_plot5.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/L1_feature_selection/ROC_plot5.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/L1_feature_selection/ROC_plot6.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/L1_feature_selection/ROC_plot6.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/L1_feature_selection/ROC_plot7.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/L1_feature_selection/ROC_plot7.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/L1_feature_selection/ROC_plot8.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/L1_feature_selection/ROC_plot8.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/L1_feature_selection/ROC_plot9.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/L1_feature_selection/ROC_plot9.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/Thumbs.db" beforeDir="false" afterPath="$PROJECT_DIR$/images/Thumbs.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/barplot_accuracies.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/barplot_accuracies.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/Main.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/Main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/graphs2.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/graphs2.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -28,157 +47,93 @@
     <session id="1265026129">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="11" />
+          <entry key="project.closed" value="12" />
           <entry key="project.open.time.10" value="1" />
           <entry key="project.open.time.11" value="1" />
           <entry key="project.open.time.2" value="1" />
           <entry key="project.open.time.5" value="2" />
           <entry key="project.open.time.6" value="1" />
-          <entry key="project.open.time.7" value="3" />
+          <entry key="project.open.time.7" value="4" />
           <entry key="project.open.time.8" value="4" />
-          <entry key="project.open.time.9" value="2" />
-          <entry key="project.opened" value="15" />
+          <entry key="project.open.time.9" value="3" />
+          <entry key="project.opened" value="17" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="py" value="25" />
+          <entry key="py" value="30" />
           <entry key="txt" value="5" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="PLAIN_TEXT" value="5" />
-          <entry key="Python" value="25" />
+          <entry key="Python" value="30" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="Python Console" value="4" />
-          <entry key="py" value="7933" />
+          <entry key="py" value="8432" />
           <entry key="txt" value="35" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="PLAIN_TEXT" value="35" />
-          <entry key="Python" value="7937" />
+          <entry key="Python" value="8436" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.5">
-      <split-first>
-        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/scripts/Main.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state>
-                  <caret line="29" column="39" selection-start-line="29" selection-start-column="39" selection-end-line="29" selection-end-column="39" />
-                  <folding>
-                    <element signature="e#24#39#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/scripts/graphs.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="421">
-                  <caret line="69" column="24" selection-start-line="69" selection-start-column="24" selection-end-line="69" selection-end-column="24" />
-                  <folding>
-                    <element signature="e#11#29#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/scripts/Final_model.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="255">
-                  <caret line="15" column="53" lean-forward="true" selection-start-line="15" selection-start-column="53" selection-end-line="15" selection-end-column="53" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/group10/results/predictions.txt">
-              <provider selected="true" editor-type-id="text-editor" />
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/data/Train_call.txt">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="3230">
-                  <caret line="190" column="25" selection-start-line="190" selection-start-column="16" selection-end-line="190" selection-end-column="25" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/scripts/filter_svm.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-2061">
-                  <caret line="25" lean-forward="true" selection-start-line="25" selection-end-line="25" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/scripts/baseline.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-1123">
-                  <caret line="60" column="32" lean-forward="true" selection-start-line="60" selection-start-column="32" selection-end-line="60" selection-end-column="32" />
-                  <folding>
-                    <element signature="e#25#40#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/scripts/predictions_file_format_check_v2.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="595">
-                  <caret line="35" selection-start-line="35" selection-end-line="35" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/scripts/graphs2.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1309">
-                  <caret line="82" selection-start-line="82" selection-end-line="82" />
-                  <folding>
-                    <element signature="e#11#29#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-first>
-      <split-second>
-        <leaf>
-          <file pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/group10/model/run_model.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="543">
-                  <caret line="99" lean-forward="true" selection-start-line="99" selection-end-line="99" />
-                  <folding>
-                    <element signature="e#516#531#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-second>
-    </splitter>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/scripts/Main.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-2210">
+              <caret line="47" column="47" selection-start-line="47" selection-start-column="47" selection-end-line="47" selection-end-column="47" />
+              <folding>
+                <element signature="e#24#39#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/scripts/baseline.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="17">
+              <caret line="60" column="32" selection-start-line="60" selection-start-column="32" selection-end-line="60" selection-end-column="32" />
+              <folding>
+                <element signature="e#25#40#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/scripts/filter_svm.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="799">
+              <caret line="111" column="21" lean-forward="true" selection-start-line="111" selection-start-column="21" selection-end-line="111" selection-end-column="21" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/scripts/graphs2.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1241">
+              <caret line="73" column="104" lean-forward="true" selection-start-line="73" selection-start-column="104" selection-end-line="73" selection-end-column="104" />
+              <folding>
+                <element signature="e#11#29#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -193,6 +148,7 @@
       <find>Model</find>
       <find>i</find>
       <find>plot</find>
+      <find>shuffl</find>
     </findStrings>
     <replaceStrings>
       <replace>n_class</replace>
@@ -204,10 +160,7 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/scripts/Main.py" />
         <option value="$PROJECT_DIR$/scripts/graphs.py" />
-        <option value="$PROJECT_DIR$/scripts/graphs2.py" />
-        <option value="$PROJECT_DIR$/scripts/Final_model.py" />
         <option value="$PROJECT_DIR$/group10/results/estimate.txt" />
         <option value="$PROJECT_DIR$/group10/model/run_model.py" />
         <option value="$PROJECT_DIR$/scripts/Feature_selection_SVM_MB.py" />
@@ -215,6 +168,9 @@
         <option value="$PROJECT_DIR$/scripts/RFECV_SVM.py" />
         <option value="$PROJECT_DIR$/scripts/filter_svm.py" />
         <option value="$PROJECT_DIR$/scripts/baseline.py" />
+        <option value="$PROJECT_DIR$/scripts/Final_model.py" />
+        <option value="$PROJECT_DIR$/scripts/graphs2.py" />
+        <option value="$PROJECT_DIR$/scripts/Main.py" />
       </list>
     </option>
   </component>
@@ -225,7 +181,7 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="132" />
+    <option name="x" value="130" />
     <option name="y" value="-20" />
     <option name="width" value="1750" />
     <option name="height" value="970" />
@@ -419,7 +375,7 @@
     <frame x="-7" y="-7" width="1550" height="840" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" x="666" y="59" width="204" height="707" id="Project" order="0" visible="true" weight="0.15838926" />
+      <window_info active="true" content_ui="combo" x="666" y="59" width="204" height="707" id="Project" order="0" visible="true" weight="0.1624161" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -472,43 +428,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/Main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="29" column="39" selection-start-line="29" selection-start-column="39" selection-end-line="29" selection-end-column="39" />
-          <folding>
-            <element signature="e#24#39#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data/Train_call.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3230">
-          <caret line="190" column="25" selection-start-line="190" selection-start-column="16" selection-end-line="190" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/graphs2.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1309">
-          <caret line="82" selection-start-line="82" selection-end-line="82" />
-          <folding>
-            <element signature="e#11#29#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/graphs.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="421">
-          <caret line="69" column="24" selection-start-line="69" selection-start-column="24" selection-end-line="69" selection-end-column="24" />
-          <folding>
-            <element signature="e#11#29#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/output/predictions.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-253">
@@ -516,11 +435,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/group10/model/output.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-406" />
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/group10/model/output.txt" />
     <entry file="file://$PROJECT_DIR$/group10/results/estimate.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -528,37 +443,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/group10/results/predictions.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/Feature_selection_SVM_RFE.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="931">
-          <caret line="97" lean-forward="true" selection-start-line="97" selection-end-line="97" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/Feature_selection_SVM_MB.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="339">
-          <caret line="154" lean-forward="true" selection-start-line="154" selection-end-line="154" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/Final_model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="15" column="53" lean-forward="true" selection-start-line="15" selection-start-column="53" selection-end-line="15" selection-end-column="53" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/group10/results/predictions.txt" />
+    <entry file="file://$PROJECT_DIR$/scripts/Feature_selection_SVM_RFE.py" />
+    <entry file="file://$PROJECT_DIR$/scripts/Feature_selection_SVM_MB.py" />
     <entry file="file://$PROJECT_DIR$/scripts/RFECV_SVM.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="439">
           <caret line="28" column="46" lean-forward="true" selection-start-line="28" selection-start-column="46" selection-end-line="28" selection-end-column="46" />
-          <folding>
-            <element signature="e#38#48#0" expanded="true" />
-          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/graphs.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1122">
+          <caret line="69" column="24" selection-start-line="69" selection-start-column="24" selection-end-line="69" selection-end-column="24" />
         </state>
       </provider>
     </entry>
@@ -572,26 +470,57 @@
     <entry file="file://$PROJECT_DIR$/group10/model/run_model.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="543">
-          <caret line="99" lean-forward="true" selection-start-line="99" selection-end-line="99" />
+          <caret line="99" selection-start-line="99" selection-end-line="99" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/Final_model.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="15" column="53" selection-start-line="15" selection-start-column="53" selection-end-line="15" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/Train_call.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="648">
+          <caret line="190" column="25" selection-start-line="190" selection-start-column="16" selection-end-line="190" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/graphs2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1241">
+          <caret line="73" column="104" lean-forward="true" selection-start-line="73" selection-start-column="104" selection-end-line="73" selection-end-column="104" />
           <folding>
-            <element signature="e#516#531#0" expanded="true" />
+            <element signature="e#11#29#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/scripts/filter_svm.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2061">
-          <caret line="25" lean-forward="true" selection-start-line="25" selection-end-line="25" />
+        <state relative-caret-position="799">
+          <caret line="111" column="21" lean-forward="true" selection-start-line="111" selection-start-column="21" selection-end-line="111" selection-end-column="21" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/scripts/baseline.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1123">
-          <caret line="60" column="32" lean-forward="true" selection-start-line="60" selection-start-column="32" selection-end-line="60" selection-end-column="32" />
+        <state relative-caret-position="17">
+          <caret line="60" column="32" selection-start-line="60" selection-start-column="32" selection-end-line="60" selection-end-column="32" />
           <folding>
             <element signature="e#25#40#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/Main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2210">
+          <caret line="47" column="47" selection-start-line="47" selection-start-column="47" selection-end-line="47" selection-end-column="47" />
+          <folding>
+            <element signature="e#24#39#0" expanded="true" />
           </folding>
         </state>
       </provider>
