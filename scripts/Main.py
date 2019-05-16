@@ -29,7 +29,7 @@ class Model:
 
 
 def plot_coefficients(classifier, feature_names, top_features=10):
-    coef = np.array([mean(x) for x in zip(map(abs, classifier.coef_[0]), map(abs, classifier.coef_[1]), map(abs, classifier.coef_[2]))])
+    coef = np.array([max(x) for x in zip(map(abs, classifier.coef_[0]), map(abs, classifier.coef_[1]), map(abs, classifier.coef_[2]))])
     print(coef)
     top_positive_coefficients = np.argsort(coef)[-top_features:]
     top_negative_coefficients = np.argsort(coef)[:top_features]
@@ -49,7 +49,7 @@ def plot_coefficients(classifier, feature_names, top_features=10):
 
 
 def l1_selection(x_train, y_train, c_li, state):
-    lsvc = LinearSVC(C=c_li, penalty="l1", dual=False, random_state=state+1).fit(x_train, y_train)
+    lsvc = LinearSVC(C=c_li, penalty="l1", dual=False, random_state=state+1, max_iter=1000000).fit(x_train, ravel(y_train))
     model = SelectFromModel(lsvc, prefit=True)
     x_new = model.transform(x_train)
     n_features = x_new.shape[1]
@@ -66,7 +66,7 @@ def inner_cv(x_train, y_train, in_n_splits, state, estimator, param, iteration):
 
         in_cv = StratifiedKFold(n_splits=in_n_splits, shuffle=True, random_state=state)
         # inner loop for hyperparameters tuning
-        gscv = GridSearchCV(estimator=estimator, param_grid=param, cv=in_cv, verbose=1, n_jobs=-1)
+        gscv = GridSearchCV(estimator=estimator, param_grid=param, cv=in_cv, verbose=0, n_jobs=-1, iid=False)
 
         # train a model with each set of parameters
         gscv.fit(x_train_in, ravel(y_train))
@@ -103,7 +103,7 @@ def outer_cv(x_train, y_train, estimator, param, use_stratified):
     iterations = 15
 
     for iteration in range(int(iterations/out_n_splits)):
-        state = states[iteration]
+        state = states[iteration]+1
         if use_stratified:
             # StratifiedKFold = Equal amount of each class per fold (uncomment next line to use)
             out_cv = StratifiedKFold(n_splits=out_n_splits, shuffle=True, random_state=state)
@@ -130,7 +130,7 @@ def outer_cv(x_train, y_train, estimator, param, use_stratified):
             kernel = best_parameters['kernel']
 
             svc = SVC(C=c, kernel=kernel, degree=degree, gamma=gamma)
-            svc.fit(x_train_out_transformed, y_train_out)
+            svc.fit(x_train_out_transformed, ravel(y_train_out))
             val_score = svc.score(x_test_out_transformed, ravel(y_test_out))
             model = Model(svc, c_l1, best_features, val_score, best_parameters, x_test_out_transformed.shape[1],
                           iteration, lscv, index)
