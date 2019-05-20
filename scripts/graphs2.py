@@ -77,9 +77,9 @@ def label_diff(i,j,text,X,Y):
     ax.annotate('', xy=(X[i],y), xytext=(X[j],y), arrowprops=props)
 
 # Call the function
-label_diff(0,1,'p=0.0028',ind,menMeans)
-label_diff(0,2,'p=0.0002',ind,menMeans)
-label_diff(0,3,'p=0.0006',ind,menMeans)
+label_diff(0,1,'p=0.0085',ind,menMeans)
+label_diff(0,2,'p=0.0007',ind,menMeans)
+label_diff(0,3,'p=0.0016',ind,menMeans)
 
 plt.ylabel("Accuracy")
 plt.xlabel("Feature selection method")

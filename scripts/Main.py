@@ -211,6 +211,7 @@ def nested_svm(data, labels, hyperparameters, use_stratified):
         print(data.Chromosome[i], data.Start[i], data.End[i])
 
     print(best_features, validation_score)
+    print(highest_model.n_features)
 
 
 def load_data(input_file, label_file):
